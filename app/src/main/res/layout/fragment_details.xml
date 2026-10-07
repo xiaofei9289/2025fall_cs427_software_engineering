@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:id="@+id/details"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
+        android:orientation="vertical">
+
+        <!-- City Name -->
+        <TextView
+            android:id="@+id/welcomeText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:padding="8dp"
+            android:gravity="center"
+            tools:text="Welcome to Chicago" />
+
+        <!-- LLM-Generated City Image -->
+        <ImageView
+            android:id="@+id/cityImageView"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
+            android:scaleType="centerCrop"
+            android:contentDescription="@string/city_landscape_image"
+            android:background="#E0E0E0"
+            android:visibility="gone" />
+
+        <!-- Image Loading Indicator -->
+        <ProgressBar
+            android:id="@+id/imageProgressBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
+            android:visibility="gone" />
+
+        <!-- Image Status Text -->
+        <TextView
+            android:id="@+id/imageStatusText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="12sp"
+            android:padding="4dp"
+            android:gravity="center"
+            android:visibility="gone"
+            tools:text="Generating city image..." />
+
+        <!-- Date and Time -->
+        <TextView
+            android:id="@+id/tvDateTime"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="14sp"
+            android:padding="8dp"
+            android:gravity="center"
+            android:visibility="gone"
+            tools:text="Nov 10, 2025 14:30" />
+
+        <!-- Temperature (Large Display) -->
+        <TextView
+            android:id="@+id/tvTemperature"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="48sp"
+            android:textStyle="bold"
+            android:gravity="center"
+            android:padding="16dp"
+            android:visibility="gone"
+            tools:text="72°F" />
+
+        <!-- Weather Conditions -->
+        <TextView
+            android:id="@+id/tvConditions"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="20sp"
+            android:gravity="center"
+            android:padding="8dp"
+            android:visibility="gone"
+            tools:text="Clear Sky" />
+
+        <!-- Humidity -->
+        <TextView
+            android:id="@+id/tvHumidity"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="16sp"
+            android:padding="8dp"
+            android:gravity="center"
+            android:visibility="gone"
+            tools:text="Humidity: 65%" />
+
+        <!-- Wind Speed -->
+        <TextView
+            android:id="@+id/tvWind"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="16sp"
+            android:padding="8dp"
+            android:paddingBottom="16dp"
+            android:gravity="center"
+            android:visibility="gone"
+            tools:text="Wind: 5.1 mph" />
+
+        <!-- Weather Data Loading Indicator -->
+        <ProgressBar
+            android:id="@+id/progressBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="24dp"
+            android:layout_marginBottom="24dp"
+            android:visibility="gone" />
+
+        <!-- Action Buttons -->
+        <Button
+            android:id="@+id/insightsButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Weather Insights"
+            android:layout_marginTop="16dp"
+            android:enabled="false" />
+
+        <Button
+            android:id="@+id/mapButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Map"
+            android:layout_marginTop="8dp" />
+
+    </LinearLayout>
+
+</ScrollView>

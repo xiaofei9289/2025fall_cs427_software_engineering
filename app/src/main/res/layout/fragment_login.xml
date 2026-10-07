@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Login Fragment Layout - Iteration 3 Authentication Page -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="24dp"
+    android:gravity="center">
+
+    <TextView
+        android:id="@+id/tvAppTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="CS427 Weather App"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:layout_marginBottom="32dp" />
+
+    <!-- TODO: Team member xfeng18 - Add EditText for username -->
+    <EditText
+        android:id="@+id/etUsername"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Username (NetID)"
+        android:inputType="text"
+        android:layout_marginBottom="16dp" />
+
+    <!-- TODO: Team member xfeng18 - Add EditText for password -->
+    <EditText
+        android:id="@+id/etPassword"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Password"
+        android:inputType="textPassword"
+        android:layout_marginBottom="16dp" />
+
+    <!--
+    TODO: Team member xfeng18 - Add EditText for theme description (LLM-driven UI customization)
+
+    DESIGN DECISION: This is intentionally an EditText for free-form natural language input,
+    NOT a RadioButton/Spinner with predefined options.
+
+    Per Iteration 3 requirements (FA25-Iteration3.pdf, page 4):
+    - "text input field where users can describe their desired theme in natural language"
+    - Examples: "summer beach", "cyberpunk nightscape"
+    - LLM (Gemini API) dynamically generates theme colors based on natural language description
+
+    Demo requirement (page 5) explicitly states: "Use two distinctly different theme
+    descriptions in natural language for each user to demonstrate that the LLM generates
+    visually different UI themes based on the descriptions."
+
+    This differs from earlier documentation mentioning predefined "light/dark/blue" themes.
+    The current requirement mandates LLM-driven UI customization with free-form text input.
+    -->
+    <EditText
+        android:id="@+id/etThemeDescription"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Theme Description (e.g., summer beach, cyberpunk nightscape)"
+        android:inputType="text"
+        android:layout_marginBottom="24dp"
+        android:visibility="visible"
+        android:enabled="true"
+        android:focusable="true"
+        android:clickable="true" />
+
+    <!-- Loading indicator for LLM theme generation -->
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:visibility="gone"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="8dp" />
+
+    <TextView
+        android:id="@+id/tvLoadingMessage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Generating your custom theme..."
+        android:textSize="14sp"
+        android:textStyle="italic"
+        android:visibility="gone"
+        android:layout_marginBottom="16dp" />
+
+    <!-- Login mode buttons -->
+    <LinearLayout
+        android:id="@+id/layoutLoginMode"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <Button
+            android:id="@+id/btnLogin"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Login"
+            android:layout_marginBottom="12dp" />
+
+        <Button
+            android:id="@+id/btnSignUp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Sign Up" />
+
+    </LinearLayout>
+
+    <!-- Signup mode buttons -->
+    <LinearLayout
+        android:id="@+id/layoutSignupMode"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <Button
+            android:id="@+id/btnSignUpConfirm"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Sign Up"
+            android:layout_marginBottom="12dp" />
+
+        <Button
+            android:id="@+id/btnBack"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Back" />
+
+    </LinearLayout>
+
+</LinearLayout>

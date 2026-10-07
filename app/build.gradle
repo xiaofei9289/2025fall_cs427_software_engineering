@@ -1,0 +1,126 @@
+plugins {
+    id 'com.android.application'
+}
+
+android {
+    compileSdk 34
+
+    defaultConfig {
+        applicationId "edu.uiuc.cs427app"
+        minSdk 29
+        targetSdk 34
+        versionCode 1
+        versionName "1.0"
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+
+        // TODO: Add your API keys to local.properties file:
+        // WEATHER_API_KEY=your_openweather_api_key
+        // GEMINI_API_KEY=your_gemini_api_key
+        // MAPS_API_KEY=your_google_maps_api_key
+
+        // Read API keys from local.properties
+        Properties properties = new Properties()
+        if (rootProject.file("local.properties").exists()) {
+            properties.load(rootProject.file("local.properties").newDataInputStream())
+        }
+
+        buildConfigField "String", "WEATHER_API_KEY", "\"${properties.getProperty('WEATHER_API_KEY', '')}\""
+        buildConfigField "String", "GEMINI_API_KEY", "\"${properties.getProperty('GEMINI_API_KEY', '')}\""
+        manifestPlaceholders = [MAPS_API_KEY: properties.getProperty('MAPS_API_KEY', '')]
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    buildFeatures {
+        viewBinding true
+        buildConfig true
+    }
+    
+    testOptions {
+        unitTests.returnDefaultValues = true
+    }
+}
+
+configurations.all {
+    resolutionStrategy {
+        force 'org.jetbrains.kotlin:kotlin-stdlib:1.8.22'
+        force 'org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.8.22'
+        force 'org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.8.22'
+        // Force consistent test core version for Android API 35 compatibility
+        force 'androidx.test:core:1.6.1'
+        force 'androidx.test:core-ktx:1.6.1'
+    }
+}
+
+dependencies {
+    // AndroidX Core Libraries
+    implementation 'androidx.appcompat:appcompat:1.4.2'
+    implementation 'com.google.android.material:material:1.6.1'
+    implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
+
+    // Navigation Components
+    implementation 'androidx.navigation:navigation-fragment:2.3.5'
+    implementation 'androidx.navigation:navigation-ui:2.3.5'
+
+    // Room Database (for local data persistence)
+    implementation 'androidx.room:room-runtime:2.4.3'
+    annotationProcessor 'androidx.room:room-compiler:2.4.3'
+    // Room testing
+    testImplementation 'androidx.room:room-testing:2.4.3'
+
+    // ViewModel and LiveData (MVVM architecture)
+    implementation 'androidx.lifecycle:lifecycle-viewmodel:2.5.1'
+    implementation 'androidx.lifecycle:lifecycle-livedata:2.5.1'
+    implementation 'androidx.lifecycle:lifecycle-runtime:2.5.1'
+
+    // Retrofit (HTTP client for API calls)
+    implementation 'com.squareup.retrofit2:retrofit:2.9.0'
+    implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
+
+    // OkHttp (Retrofit dependency + logging)
+    implementation 'com.squareup.okhttp3:okhttp:4.11.0'
+    implementation 'com.squareup.okhttp3:logging-interceptor:4.11.0'
+
+    // Google Maps
+    implementation 'com.google.android.gms:play-services-maps:18.1.0'
+    implementation 'com.google.android.gms:play-services-location:21.0.1'
+
+    // BCrypt for password hashing
+    implementation 'org.mindrot:jbcrypt:0.4'
+
+    // Gson (JSON parsing - used by Retrofit)
+    implementation 'com.google.code.gson:gson:2.10.1'
+
+    // RecyclerView for lists
+    implementation 'androidx.recyclerview:recyclerview:1.2.1'
+
+    // Testing Dependencies
+    testImplementation 'junit:junit:4.13.2'
+    testImplementation 'org.mockito:mockito-core:5.3.1'
+    testImplementation 'androidx.arch.core:core-testing:2.2.0'
+
+    // Android Instrumented Tests - Updated for Android API 35 compatibility
+    androidTestImplementation 'androidx.test.ext:junit:1.2.1'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.6.1'
+    androidTestImplementation 'androidx.test.espresso:espresso-contrib:3.6.1'
+    androidTestImplementation 'androidx.test:runner:1.6.2'
+    androidTestImplementation 'androidx.test:rules:1.6.1'
+    androidTestImplementation 'androidx.test:core:1.6.1'
+    // Required for PlatformTestStorageRegistry
+    androidTestImplementation 'androidx.test.services:storage:1.4.2'
+
+    // Database Instrumented Tests
+    androidTestImplementation 'androidx.room:room-testing:2.4.3'
+
+    // Fragment Tests - debugImplementation is required for FragmentScenario to work
+    debugImplementation 'androidx.fragment:fragment-testing:1.5.7'
+}

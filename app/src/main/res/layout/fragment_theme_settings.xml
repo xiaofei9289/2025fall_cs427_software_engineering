@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Theme Settings Fragment Layout -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <!-- Header -->
+    <TextView
+        android:id="@+id/header"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Theme Settings"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:layout_marginBottom="24dp" />
+
+    <!-- Current Theme Display -->
+    <TextView
+        android:id="@+id/tvCurrentTheme"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Current Theme: Default"
+        android:textSize="18sp"
+        android:layout_marginBottom="32dp" />
+
+    <!-- Theme Selection Buttons -->
+    <Button
+        android:id="@+id/btnLightTheme"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Light Theme"
+        android:layout_marginBottom="8dp" />
+
+    <Button
+        android:id="@+id/btnDarkTheme"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Dark Theme"
+        android:layout_marginBottom="8dp" />
+
+    <Button
+        android:id="@+id/btnBlueTheme"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Blue Theme"
+        android:layout_marginBottom="8dp" />
+
+    <Button
+        android:id="@+id/btnCustomTheme"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Apply Custom LLM Theme"
+        android:layout_marginBottom="24dp" />
+
+    <!-- Back Button -->
+    <Button
+        android:id="@+id/btnBack"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Back"
+        android:layout_marginTop="16dp" />
+
+</LinearLayout>
+

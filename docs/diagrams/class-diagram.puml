@@ -1,0 +1,317 @@
+@startuml
+
+title CS427 Weather App - UML Class Diagram
+
+' Single Activity (Host)
+class MainActivity <<Activity>> {
+  -ActivityMainBinding binding
+  -FragmentManager fragmentManager
+  -CityListViewModel cityListViewModel
+  +onCreate(Bundle): void
+  +navigateToFragment(Fragment): void
+  +onBackPressed(): void
+  +applyUserTheme(): void
+}
+
+' Fragments
+class LoginFragment <<Fragment>> {
+  -FragmentLoginBinding binding
+  -LoginViewModel loginViewModel
+  +onCreateView(LayoutInflater, ViewGroup, Bundle): View
+  +onViewCreated(View, Bundle): void
+  +onLoginButtonClick(): void
+  +onCreateAccountClick(): void
+  +navigateToCityList(): void
+  +showError(String): void
+}
+
+class CityListFragment <<Fragment>> {
+  -FragmentCityListBinding binding
+  -CityListViewModel cityListViewModel
+  -CityAdapter cityAdapter
+  -RecyclerView recyclerView
+  +onCreateView(LayoutInflater, ViewGroup, Bundle): View
+  +onViewCreated(View, Bundle): void
+  +onAddCityClick(): void
+  +onCityItemClick(City): void
+  +onCityLongPress(City): void
+  +navigateToDetails(City): void
+  +observeCityList(): void
+}
+
+class DetailsFragment <<Fragment>> {
+  -FragmentDetailsBinding binding
+  -WeatherViewModel weatherViewModel
+  -Long cityId
+  -String cityName
+  +onCreateView(LayoutInflater, ViewGroup, Bundle): View
+  +onViewCreated(View, Bundle): void
+  +onShowMapClick(): void
+  +onGetInsightsClick(): void
+  +displayWeatherData(WeatherData): void
+  +displayLLMInsights(String): void
+  +navigateToMap(): void
+}
+
+class MapFragment <<Fragment>> {
+  -FragmentMapBinding binding
+  -MapView mapView
+  -Double cityLatitude
+  -Double cityLongitude
+  -String cityName
+  +onCreateView(LayoutInflater, ViewGroup, Bundle): View
+  +onViewCreated(View, Bundle): void
+  +onMapReady(GoogleMap): void
+  +addCityMarker(): void
+  +centerMapOnCity(): void
+}
+
+class ThemeSettingsFragment <<Fragment>> {
+  -FragmentThemeSettingsBinding binding
+  -ThemeViewModel themeViewModel
+  -RecyclerView themeRecyclerView
+  -ThemeAdapter themeAdapter
+  +onCreateView(LayoutInflater, ViewGroup, Bundle): View
+  +onViewCreated(View, Bundle): void
+  +onThemeSelected(Theme): void
+  +displayAvailableThemes(): void
+  +observeCurrentTheme(): void
+}
+
+' ViewModels
+class LoginViewModel {
+  -UserRepository userRepository
+  -LiveData<Result<User>> loginResult
+  +login(String, String): void
+  +createAccount(String, String, String): void
+  +validateCredentials(String, String): Boolean
+}
+
+class CityListViewModel {
+  -CityRepository cityRepository
+  -LiveData<List<City>> citiesLiveData
+  -Long userId
+  +loadCities(): void
+  +addCity(String): void
+  +removeCity(Long): void
+  +getCitiesForUser(): LiveData<List<City>>
+}
+
+class WeatherViewModel {
+  -WeatherRepository weatherRepository
+  -LLMHelper llmHelper
+  -LiveData<WeatherData> weatherData
+  -LiveData<String> llmInsights
+  +fetchWeather(Long): void
+  +fetchLLMInsights(WeatherData): void
+  +getCachedWeather(Long): WeatherData
+}
+
+class ThemeViewModel {
+  -UserRepository userRepository
+  -LiveData<List<Theme>> availableThemes
+  -LiveData<Theme> currentTheme
+  -Long userId
+  +loadAvailableThemes(): void
+  +selectTheme(Long): void
+  +getCurrentTheme(): LiveData<Theme>
+  +applyTheme(Theme): void
+}
+
+' Helper Classes
+class WeatherHelper {
+  -WeatherApiClient weatherApiClient
+  -AppDatabase database
+  +fetchWeatherData(Double, Double): WeatherData
+  +cacheWeatherData(WeatherData): void
+  +getCachedData(Long): WeatherData
+  +isDataStale(WeatherData): Boolean
+}
+
+class LLMHelper {
+  -GeminiApiClient geminiApiClient
+  -String apiKey
+  +generateInsights(WeatherData): String
+  +constructPrompt(WeatherData): String
+  +parseResponse(String): String
+}
+
+' Repositories
+class UserRepository {
+  -UserDao userDao
+  -SharedPreferences sharedPreferences
+  +authenticateUser(String, String): User
+  +createUser(User): Long
+  +getUserById(Long): User
+  +isUsernameAvailable(String): Boolean
+  +saveCurrentUser(User): void
+  +getCurrentUser(): User
+}
+
+class CityRepository {
+  -CityDao cityDao
+  -WeatherApiClient weatherApiClient
+  +getCitiesForUser(Long): List<City>
+  +addCity(City): Long
+  +removeCity(Long): void
+  +validateCity(String): Boolean
+  +fetchCityCoordinates(String): Pair<Double>
+}
+
+class WeatherRepository {
+  -WeatherHelper weatherHelper
+  -WeatherDao weatherDao
+  +getWeather(Long): WeatherData
+  +refreshWeather(Long): WeatherData
+  +getCachedWeather(Long): WeatherData
+}
+
+' Data Models (Entities)
+class User <<Entity>> {
+  +Long id
+  +String username
+  +String passwordHash
+  +String themePreference
+  +Date createdAt
+  +validatePassword(String): Boolean
+  +setTheme(String): void
+}
+
+class City <<Entity>> {
+  +Long id
+  +Long userId
+  +String name
+  +Double latitude
+  +Double longitude
+  +Date addedAt
+  +getCoordinates(): Pair<Double>
+}
+
+class WeatherData <<Entity>> {
+  +Long id
+  +Long cityId
+  +Double temperature
+  +String conditions
+  +Int humidity
+  +Double windSpeed
+  +Date timestamp
+  +isStale(): Boolean
+  +getFormattedTemperature(): String
+}
+
+class Theme <<Entity>> {
+  +Long id
+  +String name
+  +String primaryColor
+  +String secondaryColor
+  +Boolean isDarkMode
+  +applyTheme(Context): void
+}
+
+' DAOs
+interface UserDao {
+  +insert(User): Long
+  +getUserByUsername(String): User
+  +getUserById(Long): User
+  +updateUser(User): void
+}
+
+interface CityDao {
+  +insert(City): Long
+  +delete(City): void
+  +getCitiesByUserId(Long): List<City>
+  +getCityById(Long): City
+}
+
+interface WeatherDao {
+  +insert(WeatherData): Long
+  +getWeatherByCityId(Long): WeatherData
+  +deleteOldWeather(Date): void
+}
+
+' API Clients
+class WeatherApiClient {
+  -String baseUrl
+  -String apiKey
+  -Retrofit retrofit
+  +getCurrentWeather(Double, Double): Call<WeatherResponse>
+  +searchCity(String): Call<CitySearchResponse>
+}
+
+class GeminiApiClient {
+  -String baseUrl
+  -String apiKey
+  -Retrofit retrofit
+  +generateContent(String): Call<GeminiResponse>
+}
+
+' Database
+class AppDatabase <<RoomDatabase>> {
+  -UserDao userDao
+  -CityDao cityDao
+  -WeatherDao weatherDao
+  +getInstance(Context): AppDatabase
+  +clearAllTables(): void
+}
+
+' Utility
+class CityAdapter {
+  -List<City> cities
+  -OnItemClickListener onItemClickListener
+  -OnItemLongClickListener onItemLongClickListener
+  +onCreateViewHolder(ViewGroup, Int): CityViewHolder
+  +onBindViewHolder(CityViewHolder, Int): void
+  +getItemCount(): Int
+}
+
+' Relationships - MainActivity hosts Fragments
+MainActivity "1" --> "1" LoginFragment : hosts
+MainActivity "1" --> "1" CityListFragment : hosts
+MainActivity "1" --> "1" DetailsFragment : hosts
+MainActivity "1" --> "1" MapFragment : hosts
+MainActivity "1" --> "1" ThemeSettingsFragment : hosts
+
+' Fragments to ViewModels
+LoginFragment --> LoginViewModel : uses
+CityListFragment --> CityListViewModel : uses
+CityListFragment --> CityAdapter : uses
+DetailsFragment --> WeatherViewModel : uses
+ThemeSettingsFragment --> ThemeViewModel : uses
+
+' ViewModels to Repositories
+LoginViewModel --> UserRepository : uses
+CityListViewModel --> CityRepository : uses
+WeatherViewModel --> WeatherRepository : uses
+WeatherViewModel --> LLMHelper : uses
+ThemeViewModel --> UserRepository : uses
+
+' Repositories to DAOs
+UserRepository --> UserDao : uses
+CityRepository --> CityDao : uses
+WeatherRepository --> WeatherDao : uses
+
+' Repositories to Helpers/Clients
+CityRepository --> WeatherApiClient : uses
+WeatherRepository --> WeatherHelper : uses
+WeatherHelper --> WeatherApiClient : uses
+LLMHelper --> GeminiApiClient : uses
+
+' Database relationships
+AppDatabase --> UserDao : contains
+AppDatabase --> CityDao : contains
+AppDatabase --> WeatherDao : contains
+
+' DAOs to Entities (dashed for manages relationship)
+UserDao ..> User : manages
+CityDao ..> City : manages
+WeatherDao ..> WeatherData : manages
+
+' Entity relationships with MULTIPLICITIES
+User "1" -- "*" City : has
+City "1" -- "1" WeatherData : has
+User "1" -- "1" Theme : selects
+
+' Adapter to Model
+CityAdapter --> City : displays
+
+@enduml

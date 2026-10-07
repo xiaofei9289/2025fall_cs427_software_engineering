@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- City List Fragment Layout - Main screen with user's cities -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <!-- Welcome message with team number and username -->
+    <TextView
+        android:id="@+id/tvWelcome"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Team 407 - Username"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:layout_marginBottom="16dp" />
+
+    <TextView
+        android:id="@+id/tvSubtitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="CS427 Project App"
+        android:layout_marginBottom="8dp" />
+
+    <TextView
+        android:id="@+id/tvLocationsHeader"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="List of Locations"
+        android:textStyle="bold"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="8dp" />
+
+    <!-- Empty state message -->
+    <TextView
+        android:id="@+id/tvEmptyState"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:text="No cities added yet. Click 'ADD A LOCATION' to add your first city."
+        android:textSize="16sp"
+        android:textColor="#666666"
+        android:gravity="center"
+        android:visibility="gone" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvCities"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
+
+    <!-- TODO: Team member xincai3/twwang2 - Implement add city button click handler -->
+    <!-- TODO: Team member xincai3/twwang2 - Show dialog or navigate to add city screen -->
+    <Button
+        android:id="@+id/btnAddLocation"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="ADD A LOCATION"
+        android:layout_marginTop="16dp" />
+
+    <Button
+        android:id="@+id/btnSettings"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Settings"
+        android:layout_marginTop="8dp" />
+
+    <Button
+        android:id="@+id/btnLogout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Log Out"
+        android:layout_marginTop="8dp" />
+
+</LinearLayout>

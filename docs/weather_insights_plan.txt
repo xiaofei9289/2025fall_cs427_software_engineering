@@ -1,0 +1,86 @@
+Weather Insights Implementation Plan
+
+Objective
+Add LLM-powered question-and-answer insights to the weather details page using live OpenWeather data and Gemini (or an alternative LLM) while keeping the experience fully dynamic—no hardcoded questions or answers.
+
+Task Breakdown
+
+1. Environment & Configuration
+   [✓] Add the OpenWeather API key and Android SDK path to local.properties.
+   [✓] Expose the key via a BuildConfig field so runtime code can read BuildConfig.WEATHER_API_KEY.
+   [⚠] Confirm Retrofit services load the key from BuildConfig. (WeatherApiClient expects API key as parameter; WeatherHelper has TODO to use BuildConfig)
+
+2. Weather Data Readiness
+   [✓] Audit WeatherData, DAO, and repository to ensure temperature, feels-like, humidity, wind, precipitation, alerts, etc. are available.
+       - WeatherData has: temperature, conditions, humidity, windSpeed
+       - Missing: feels-like, precipitation, alerts
+   [✗] Extend models/entities if the LLM prompt needs additional context.
+   [✗] Ensure WeatherViewModel exposes the complete weather summary. (fetchWeather() not implemented)
+
+3. UI Entry Point
+   [✓] Update fragment_details.xml to add a "Weather Insights" button below the weather stats.
+   [⚠] Handle button clicks in DetailsFragment and navigate to a new WeatherInsights screen (fragment or activity).
+       - Button click handler exists but only shows Toast; navigation not implemented
+   [✗] Pass WeatherData via SafeArgs or a shared ViewModel.
+
+4. LLM Integration
+   [✓] LLMHelper class exists with GeminiApiClient configured
+   [✓] BuildConfig.GEMINI_API_KEY is used
+   [✗] Implement LLMHelper.generateInsights, constructPrompt, parseResponse. (All have TODO comments)
+   [✗] Add generateAnswer(weatherData, question, callback) for follow-up answers.
+   [✗] Craft prompts that describe the current weather and request structured output (e.g., JSON list of questions).
+   [✗] Handle Gemini API responses, rate limits, and errors.
+
+5. Insights Screen UX
+   [✗] Build WeatherInsightsViewModel with LiveData for questions, answer, and loading/error state.
+   [✗] On screen launch, call generateInsights and render the returned questions as buttons.
+   [✗] When a button is tapped, call generateAnswer and display the response in the UI.
+   [✗] Provide loading indicators and retry messaging.
+
+6. Prompt Design & Validation
+   [✗] Iterate on prompt wording to produce sensible questions (e.g., include sample weather summaries, desired tone, output schema).
+   [✗] Enforce output format in code to avoid brittle parsing.
+   [✗] Add fallbacks for empty or malformed LLM responses.
+
+7. Testing & QA
+   [✗] Manual test with multiple weather scenarios (warm, cold, rainy, severe).
+   [✗] Verify LLM calls are dynamically generated; simulate offline mode for graceful failure.
+   [✗] Optional: unit or instrumentation tests for prompt builders and ViewModel logic.
+
+8. Documentation & Reporting
+   [✗] Document design decisions, prompts, and any trade-offs for the final report.
+   [✗] Capture at least one case study demonstrating how the tool helped answer a weather-related question.
+
+Roles & Sequencing (suggested)
+   - Config/Infra lead: Step 1 + Gradle wiring.
+   - Data pipeline lead: Step 2 updates to models/repositories.
+   - UI lead: Step 3 + part of Step 5 layout.
+   - LLM lead: Step 4 + prompt design (Step 6).
+   - QA/documentation: Step 7 + Step 8.
+
+Sample Prompt
+```
+You are a helpful weather assistant. Based on the current conditions below, generate two concise, user-friendly questions that people might ask to plan their day. Return the result as JSON with a `questions` array.
+
+Location: {city}, {state_or_country}
+Temperature: {temperature_f}°F (feels like {feels_like_f}°F)
+Conditions: {conditions}
+Humidity: {humidity}%
+Wind: {wind_speed_mph} mph
+Precipitation chance: {precipitation_chance}%
+Alerts: {alert_summary or "None"}
+
+Example JSON format:
+{
+  "questions": [
+    "Question 1?",
+    "Question 2?"
+  ]
+}
+```
+
+---
+Status Summary:
+- Completed: Basic infrastructure (BuildConfig, API keys, UI button, LLMHelper skeleton)
+- In Progress: Button click handler (exists but incomplete)
+- Not Started: Core LLM implementation, WeatherInsights screen, ViewModel, data model extensions, testing, documentation
